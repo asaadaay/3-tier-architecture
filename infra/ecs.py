@@ -1,7 +1,9 @@
 from aws_cdk import(
     aws_ecs as ecs,
     aws_iam as iam,
-    aws_ec2 as ec2
+    aws_ec2 as ec2,
+    aws_ecr as ecr,
+    RemovalPolicy
 )
 from constructs import Construct
 
@@ -11,6 +13,14 @@ from infra.config import ecs_task_def_config
 class ECS(Construct):
     def __init__(self, scope: Construct, construct_id: str, stack_name, vpc, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
+        self.ecr_repo = ecr.Repository(
+            self,
+            f"{stack_name}-repository",
+            empty_on_delete=True,
+            removal_policy=RemovalPolicy.DESTROY,
+            repository_name=f"{stack_name}-repository"
+        )
 
         ecs_cluster = ecs.Cluster(
             self,
@@ -49,7 +59,7 @@ class ECS(Construct):
 
         ecs_container = ecs_task_definition.add_container(
             f"{stack_name}-container",
-            image=ecs.ContainerImage.from_registry(ecs_task_def_config["image-registry"]),
+            image=ecs.ContainerImage.from_registry(self.ecr_repo.repository_arn),
             container_name=f"{stack_name}-container",
             port_mappings=[ecs.PortMapping(container_port=ecs_task_def_config["container-port"])]
         )

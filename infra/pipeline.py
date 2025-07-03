@@ -26,17 +26,10 @@ class Pipeline(Construct):
             green_target_group, 
             alb_listener_80, 
             ecs_service,
+            ecr_repo,
             **kwargs
         ) -> None:
         super().__init__(scope, construct_id, **kwargs)
-
-        ecr_repo = ecr.Repository(
-            self,
-            f"{stack_name}-repository",
-            empty_on_delete=True,
-            removal_policy=RemovalPolicy.DESTROY,
-            repository_name=f"{stack_name}-repository"
-        )
 
         pipeline_artifacts_bucket = s3.Bucket(
             self,
