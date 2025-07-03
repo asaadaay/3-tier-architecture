@@ -59,6 +59,6 @@ class LoadBalancing(Construct):
         self.alb_listener_80.add_action(
             "forward-action",
             action=elbv2.ListenerAction.forward(
-                target_groups=[self.blue_target_group]
+                target_groups=[self.blue_target_group, self.green_target_group]
             )
         )
