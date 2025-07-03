@@ -1,6 +1,7 @@
 from aws_cdk import(
     aws_ec2 as ec2,
     aws_elasticloadbalancingv2 as elbv2,
+    Duration
 )
 
 from constructs import Construct
@@ -19,22 +20,41 @@ class LoadBalancing(Construct):
             vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT),
         )
 
-        alb_listener_80 = alb.add_listener(
+        self.alb_listener_80 = alb.add_listener(
             "listener-80",
             port=80
         )
 
-        target_group = elbv2.ApplicationTargetGroup(
+        self.blue_target_group = elbv2.ApplicationTargetGroup(
             self,
-            f"{stack_name}-tg",
-            port=80,
+            f"{stack_name}-tg-1",
+            port=3000,
+            protocol=elbv2.ApplicationProtocol.HTTP,
             targets=[ecs_service_target],
-            vpc=vpc
+            vpc=vpc,
+            health_check=elbv2.HealthCheck(
+                enabled=True,
+                path="/health",
+            ),
+            deregistration_delay=Duration.seconds(15)
         )
 
-        alb_listener_80.add_action(
+        self.green_target_group = elbv2.ApplicationTargetGroup(
+            self,
+            f"{stack_name}-tg-2",
+            port=3000,
+            protocol=elbv2.ApplicationProtocol.HTTP,
+            vpc=vpc,
+            health_check=elbv2.HealthCheck(
+                enabled=True,
+                path="/health",
+            ),
+            deregistration_delay=Duration.seconds(15)
+        )
+
+        self.alb_listener_80.add_action(
             "forward-action",
             action=elbv2.ListenerAction.forward(
-                target_groups=[target_group]
+                target_groups=[self.blue_target_group]
             )
         )
