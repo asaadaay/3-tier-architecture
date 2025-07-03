@@ -37,7 +37,8 @@ class LoadBalancing(Construct):
                 path="/health",
             ),
             deregistration_delay=Duration.seconds(15),
-            target_type=elbv2.TargetType.IP
+            target_type=elbv2.TargetType.IP,
+            target_group_name=f"{stack_name}-tg-1"
         )
 
         self.green_target_group = elbv2.ApplicationTargetGroup(
@@ -51,7 +52,8 @@ class LoadBalancing(Construct):
                 path="/health",
             ),
             deregistration_delay=Duration.seconds(15),
-            target_type=elbv2.TargetType.IP
+            target_type=elbv2.TargetType.IP,
+            target_group_name=f"{stack_name}-tg-2"
         )
 
         self.alb_listener_80.add_action(
