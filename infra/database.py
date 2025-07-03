@@ -17,7 +17,7 @@ class Database(Construct):
             self,
             f"{stack_name}-rds-instance",
             credentials=rds.Credentials.from_generated_secret(
-                username="admin", 
+                username="db_admin", 
                 exclude_characters=r"@!$%^&*()_+=[]{}:;\"'\\|,.<>/?`~#",
                 secret_name=f"{stack_name}-db-secret"
             ),
@@ -25,7 +25,7 @@ class Database(Construct):
                 version=rds.PostgresEngineVersion.VER_17_4
             ),
             allocated_storage=rds_config["allocated-storage"],
-            database_name="main-db",
+            database_name="app_db",
             instance_type=ec2.InstanceType(rds_config["instance-type"]),
             vpc=vpc,
             backup_retention=Duration.days(7),
