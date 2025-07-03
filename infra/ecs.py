@@ -92,17 +92,20 @@ class ECS(Construct):
             ec2.Port.tcp(5432)
         )
 
-        ecs_service = ecs.FargateService(
+        self.ecs_service = ecs.FargateService(
             self,
             f"{stack_name}-service",
             task_definition=ecs_task_definition,
             cluster=ecs_cluster,
             service_name=f"{stack_name}-service",
             desired_count=1,
-            security_groups=[ecs_service_sg]
+            security_groups=[ecs_service_sg],
+            deployment_controller=ecs.DeploymentController(
+                type=ecs.DeploymentControllerType.CODE_DEPLOY
+            )
         )
 
-        self.ecs_service_target = ecs_service.load_balancer_target(
+        self.ecs_service_target = self.ecs_service.load_balancer_target(
             container_name=ecs_container.container_name,
             container_port=ecs_container.container_port
         )
