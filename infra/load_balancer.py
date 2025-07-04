@@ -17,7 +17,7 @@ class LoadBalancing(Construct):
             f"{stack_name}-alb",
             security_group=alb_sg,
             vpc=vpc,
-            internet_facing=False,
+            internet_facing=True,
             load_balancer_name=f"{stack_name}-alb",
             vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT),
         )
@@ -30,7 +30,7 @@ class LoadBalancing(Construct):
         alb_listener_80.add_action(
             "redirect-action",
             action=elbv2.ListenerAction.redirect(
-                port=443,
+                port="443",
                 protocol="HTTPS",
                 path="/#{path}",
                 query="#{query}"
@@ -77,6 +77,6 @@ class LoadBalancing(Construct):
         self.alb_listener_443.add_action(
             "forward-action",
             action=elbv2.ListenerAction.forward(
-                target_groups=[self.blue_target_group, self.green_target_group]
+                target_groups=[self.blue_target_group]
             )
         )
