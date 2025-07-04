@@ -52,7 +52,7 @@ class ThreeTierStack(Stack):
             account_id=self.account,
             blue_target_group=load_balancing_construct.blue_target_group,
             green_target_group=load_balancing_construct.green_target_group,
-            alb_listener_80=load_balancing_construct.alb_listener_80,
+            alb_listener_443=load_balancing_construct.alb_listener_443,
             ecs_service=ecs_construct.ecs_service,
             ecr_repo=ecs_construct.ecr_repo
         )
