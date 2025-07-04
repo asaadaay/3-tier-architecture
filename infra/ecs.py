@@ -113,7 +113,7 @@ class ECS(Construct):
             task_definition=ecs_task_definition,
             cluster=ecs_cluster,
             service_name=f"{stack_name}-service",
-            desired_count=1,
+            desired_count=0,
             security_groups=[ecs_service_sg],
             deployment_controller=ecs.DeploymentController(
                 type=ecs.DeploymentControllerType.CODE_DEPLOY
