@@ -24,7 +24,7 @@ class Pipeline(Construct):
             account_id, 
             blue_target_group, 
             green_target_group, 
-            alb_listener_80, 
+            alb_listener_443, 
             ecs_service,
             ecr_repo,
             **kwargs
@@ -187,7 +187,7 @@ class Pipeline(Construct):
             blue_green_deployment_config=codedeploy.EcsBlueGreenDeploymentConfig(
                 blue_target_group=blue_target_group,
                 green_target_group=green_target_group,
-                listener=alb_listener_80
+                listener=alb_listener_443
             ),
             service=ecs_service,
             application=codedeploy_application,
