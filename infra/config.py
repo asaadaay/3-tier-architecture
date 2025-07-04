@@ -8,6 +8,7 @@ git_repo_owner = os.getenv("GIT_REPO_OWNER")
 git_repo = os.getenv("GIT_REPO")
 git_branch = os.getenv("GIT_BRANCH")
 ecr_image_uri = os.getenv("ECR_IMAGE_URI")
+certificate_arn = os.getenv("CERTIFICATE_ARN")
 
 vpc_config = {
     "cidr": "10.0.0.0/20"
@@ -23,6 +24,10 @@ rds_config = {
     "allocated-storage": 100,
     "instance-type": "t4g.micro",
     "delete-automated-backups": True
+}
+
+alb_config = {
+    "certificate-arn": certificate_arn
 }
 
 ecs_task_def_config = {
