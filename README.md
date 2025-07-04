@@ -9,6 +9,8 @@ This CDK stack deploys a complete 3 tiered architecture following best practices
 
 ## Deployment commands
 
+Create a ".env" file (see sample.env) and populate the keys with values relevant to your AWS environment.
+
 Activate virtual environment:
 ```
 $ source .venv/bin/activate
