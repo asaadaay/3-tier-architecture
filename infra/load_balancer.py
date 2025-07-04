@@ -4,6 +4,8 @@ from aws_cdk import(
     Duration
 )
 
+from infra.config import alb_config
+
 from constructs import Construct
 
 class LoadBalancing(Construct):
@@ -20,9 +22,25 @@ class LoadBalancing(Construct):
             vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT),
         )
 
-        self.alb_listener_80 = alb.add_listener(
+        alb_listener_80 = alb.add_listener(
             "listener-80",
             port=80
+        )
+
+        alb_listener_80.add_action(
+            "redirect-action",
+            action=elbv2.ListenerAction.redirect(
+                port=443,
+                protocol="HTTPS",
+                path="/#{path}",
+                query="#{query}"
+            )
+        )
+
+        self.alb_listener_443 = alb.add_listener(
+            "listener-443",
+            certificates=[elbv2.ListenerCertificate.from_arn(alb_config["certificate-arn"])],
+            port=443
         )
 
         self.blue_target_group = elbv2.ApplicationTargetGroup(
@@ -56,7 +74,7 @@ class LoadBalancing(Construct):
             target_group_name=f"{stack_name}-tg-2"
         )
 
-        self.alb_listener_80.add_action(
+        self.alb_listener_443.add_action(
             "forward-action",
             action=elbv2.ListenerAction.forward(
                 target_groups=[self.blue_target_group, self.green_target_group]
