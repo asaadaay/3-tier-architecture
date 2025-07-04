@@ -9,7 +9,7 @@ This CDK stack deploys a complete 3 tiered architecture following best practices
 
 ## Deployment commands
 
-Create a ".env" file (see sample.env) and populate the keys with values relevant to your AWS environment.
+Create a ".env" file (see sample.env) and populate the keys with values relevant to your AWS environment. After stack has been deployed, increase desired tasks for service to 1 (or more) and trigger the pipeline.
 
 Activate virtual environment:
 ```
