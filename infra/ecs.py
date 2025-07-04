@@ -76,6 +76,11 @@ class ECS(Construct):
             ec2.Port.tcp(80)
         )
 
+        self.alb_sg.add_ingress_rule(
+            ec2.Peer.ipv4("0.0.0.0/0"),
+            ec2.Port.tcp(443)
+        )
+
         ecs_service_sg = ec2.SecurityGroup(
             self,
             f"{stack_name}-ecs-service-sg",
@@ -86,7 +91,7 @@ class ECS(Construct):
 
         ecs_service_sg.add_ingress_rule(
             ec2.Peer.security_group_id(self.alb_sg.security_group_id),
-            ec2.Port.tcp(80)
+            ec2.Port.tcp(3000)
         )
 
         self.rds_sg = ec2.SecurityGroup(
