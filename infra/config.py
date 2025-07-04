@@ -9,6 +9,7 @@ git_repo = os.getenv("GIT_REPO")
 git_branch = os.getenv("GIT_BRANCH")
 ecr_image_uri = os.getenv("ECR_IMAGE_URI")
 certificate_arn = os.getenv("CERTIFICATE_ARN")
+ecr_repo_uri = os.getenv("ECR_REPO_URI")
 
 vpc_config = {
     "cidr": "10.0.0.0/20"
@@ -34,6 +35,7 @@ ecs_task_def_config = {
     "cpu": 256,
     "memory_limit_mib": 512,
     "container-port": 3000,
+    "ecr-repo-uri": ecr_repo_uri
 }
 
 pipeline_config = {

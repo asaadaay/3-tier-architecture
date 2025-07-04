@@ -59,7 +59,7 @@ class ECS(Construct):
 
         ecs_container = ecs_task_definition.add_container(
             f"{stack_name}-container",
-            image=ecs.ContainerImage.from_registry(self.ecr_repo.repository_arn),
+            image=ecs.ContainerImage.from_registry(ecs_task_def_config["ecr-repo-uri"]),
             container_name=f"{stack_name}-container",
             port_mappings=[ecs.PortMapping(container_port=ecs_task_def_config["container-port"])]
         )
